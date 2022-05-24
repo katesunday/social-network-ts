@@ -8,19 +8,10 @@ import Settings from "./components/Settings/Settings";
 import DialogsContainer from "./components/Dialogs/DialogsContainer";
 import MyFollowersContainer from "./components/myFriends/MyFollowersContainer";
 import ProfileContainer from "./components/Profile/ProfileContainer";
-import {ProfileWithParam} from "./components/Profile/ProfileWithParams";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import Login from "./components/Login/Login";
 
 
-type AppStatePropsType = {
-    // state: StatePropsType
-    // store:StoreType
-    // dispatch: (action: ActionType) => void
-    // addPost:()=> void
-    // updateNewPostChange: (newText:string) => void
-
-}
 
 const App = () => {
     return (

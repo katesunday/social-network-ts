@@ -1,7 +1,6 @@
 import React from 'react';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import {  StatePropsType } from "./redux/store";
 import ReactDOM from "react-dom";
 import { HashRouter} from "react-router-dom";
 import App from "./App";
