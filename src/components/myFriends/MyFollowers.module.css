@@ -1,0 +1,44 @@
+.follower{
+    border: 1px solid white;
+    border-radius: 15px;
+    padding: 8px;
+    display: grid;
+    grid-template-columns: 10fr 75fr 15fr;
+    /*grid-template-rows: 1fr 1fr ;*/
+}
+.Fava{
+    width: 40px;
+    border-radius: 50%;
+    margin-left: 15px;
+}
+.Fname{
+    font-size: 18px;
+    font-weight: bold;
+}
+.status{
+    font-size: 13px;
+    font-style: italic;
+}
+.followBtn{
+    width: 70px;
+    border-radius: 6px;
+    border:1px solid grey;
+}
+.followBtn:hover{
+    background-color: lightpink;
+}
+.location{
+    font-size: 13px;
+    text-align: right;
+    font-style:oblique;
+}
+.pagesBtn{
+    font-weight: bold;
+    background-color: lightpink;
+    border-radius: 3px;
+    border: 1px solid black;
+}
+.loader{
+    width: 150px;
+    height: 70px;
+}

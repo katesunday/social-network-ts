@@ -1,0 +1,15 @@
+.header{
+    grid-area: h;
+    background-color: lightseagreen;
+    border-radius: 15px;
+    display: flex;
+}
+.logo{
+    height: 45px;
+    width: 45px;
+    border-radius: 25px;
+    margin-top: 5px;
+}
+.login a{
+    color: black;
+}
