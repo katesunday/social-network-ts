@@ -9,9 +9,9 @@ let mapStateToPropsForRedirect = (state: StoreType)=>({
 export const withAuthRedirect = (Component: any) => {
  class RedirectComponent extends React.Component<{isAuth: boolean}>{
      render() {
-         // if(!this.props.isAuth) {
-         //      return <Navigate to={'/login'}/>
-         // }
+         if(!this.props.isAuth) {
+              return <Navigate to={'/login'}/>
+         }
          return <Component {...this.props}/>
 
      }

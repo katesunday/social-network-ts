@@ -5,13 +5,15 @@ import sideFriendsBarPageReducer from "./sideFriendsBarPage-reducer";
 import myFollowersReducer from "./myFollowers-reducer";
 import authReducer from "./auth-reducer";
 import thunkMiddleware from "redux-thunk";
+import { reducer as formReducer } from 'redux-form';
 
 let rootReducer = combineReducers({
     profilePage:profileReducer,
     dialogsPage: dialogsReducer,
     sideFriendsBarPage:sideFriendsBarPageReducer,
     myFollowers: myFollowersReducer,
-    auth: authReducer
+    auth: authReducer,
+    form:formReducer
 })
 
 let store = createStore(rootReducer,applyMiddleware(thunkMiddleware));

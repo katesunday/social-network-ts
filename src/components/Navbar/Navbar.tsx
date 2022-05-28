@@ -4,6 +4,7 @@ import {NavLink} from "react-router-dom";
 import {StoreType} from "../../redux/redux-store";
 import SideFriendsBarContainer from "../SideFrendsBar/SideFriendsBarContainer";
 
+
 type NamesPropsType = {
     store:StoreType
    // friendsItems: Array<SideFriendsBarPropsType>

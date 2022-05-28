@@ -81,11 +81,11 @@ function ProfileWithMatch(props: ProfilePropsType): React.ReactNode {
                              status={props.status} getStatus={props.getStatus}/>
 }
 
-//let AuthRedirectComponent = withAuthRedirect(ProfileWithMatch)
+let AuthRedirectComponent = withAuthRedirect(ProfileWithMatch)
 
 //export default connect(mapStateToProps , {getUserProfile , checkAuthMeProfile})(AuthRedirectComponent)
 export default compose(
     withAuthRedirect ,
     connect(mapStateToProps ,
         {getUserProfile , checkAuthMeProfile , getStatus , updateStatus})
-)(ProfileWithMatch)
+)(AuthRedirectComponent)
