@@ -13,14 +13,7 @@ const Profile = (props: ProfilePropsType) => {
     return (
         <div>
             <ProfileInfo profile={props.profile} status = {props.status} updateStatus = {props.updateStatus}/>
-            <MyPostsContainer
-               // store = {props.store}
-                // posts={props.posts}
-                // newPostText={props.newPostText}
-                // dispatch={props.dispatch}
-                // addPost = {props.addPost}
-                // updateNewPostChange = {props.updateNewPostChange}
-            />
+            <MyPostsContainer/>
         </div>
     );
 };

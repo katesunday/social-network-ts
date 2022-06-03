@@ -2,14 +2,12 @@ import React , {useRef} from 'react';
 import styles from './MyPosts.module.css';
 import Post from "./Post/Post";
 import {PostDataPropsType} from "./Post/MyPostsContainer";
+import {AddPostFormRedux , AddPostFormType} from "./Post/AddPostFormRedux";
 
 
 type MyPostsPropsType = {
     posts: Array<PostDataPropsType>
-    addPost:()=> void
-    newPostText:string
-    updateNewPostChange: (newText:string) => void
-    // dispatch: (action: ActionType)=>void
+    addPost:(newPostBody:string)=> void
 }
 
 const MyPosts = (props:MyPostsPropsType) => {
@@ -19,27 +17,16 @@ const MyPosts = (props:MyPostsPropsType) => {
           <Post message={message.message} likeAmount={message.likeAmount}/>
       )
   })
-    let newPostElement = useRef<HTMLTextAreaElement | null>(null);
-    const addNewPost = () => {
-        if(newPostElement.current){
-            props.addPost();
-           // props.dispatch(addPostAC())
-        }
-    }
-    const onPostChange = () => {
-        if(newPostElement.current) {
-            let text = newPostElement.current.value
-            props.updateNewPostChange(text)
-          //  props.dispatch(updateNewPostAC(text))
-        }
+    const addNewPost = (addPostData:AddPostFormType) => {
+            props.addPost(addPostData.newPostBody);
+
     }
 
     return (
         <div>
             <div className={styles.newPost}>
                 New post
-                <textarea ref={newPostElement} value={props.newPostText} onChange={onPostChange}/>
-                <button onClick={addNewPost} className={styles.addPostBtn}>Add</button>
+                <AddPostFormRedux onSubmit = {addNewPost}/>
             </div>
             <div>
                 My posts:
@@ -52,3 +39,5 @@ const MyPosts = (props:MyPostsPropsType) => {
 };
 
 export default MyPosts;
+
+

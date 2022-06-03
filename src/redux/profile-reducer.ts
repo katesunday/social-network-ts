@@ -1,5 +1,5 @@
 import {authAPI , followersAPI , profileAPI} from "../api/api";
-import {sendNewMessageAC , updateNewMessageBodyAC} from "./dialogs-reducer";
+import {sendNewMessageAC } from "./dialogs-reducer";
 import {
     followSuccess ,
     setCurrentPage ,
@@ -11,14 +11,12 @@ import {setAuthUserData} from "./auth-reducer";
 import {PostDataPropsType} from "../components/Profile/MyPosts/Post/MyPostsContainer";
 
 const ADD_POST = 'ADD-POST';
-const UPDATE_NEW_POST = 'UPDATE-NEW-POST';
 const SET_USER_PROFILE = 'SET-USER-PROFILE';
 const SET_STATUS = 'SET-STATUS';
 
 
 export type ProfilePageType = {
     posts: Array<PostDataPropsType>
-    newPostText: string
     profile: UserProfileType | null
     status: string
 }
@@ -49,34 +47,25 @@ let initialState: ProfilePageType = {
         {id: 1 , message: "Hi,how are you?" , likeAmount: 15} ,
         {id: 2 , message: "It's my first post!" , likeAmount: 20} ,
     ] ,
-    newPostText: 'it-camasutra.by' ,
     profile: null ,
     status: ""
 }
 
-//type profileReducerType = (state: ProfilePageType , action: ActionType) => ProfilePageType
 const profileReducer = (state: ProfilePageType = initialState , action: ActionType): ProfilePageType => {
     switch (action.type) {
         case ADD_POST: {
             let newPost = {
                 id: 6 ,
-                message: state.newPostText ,
+                message: action.newPostBody ,
                 likeAmount: 0 ,
             }
             return {
                 ...state ,
-                posts: [...state.posts , newPost] ,
-                newPostText: ''
+                posts: [ newPost,...state.posts ] ,
             }
 
         }
-        case UPDATE_NEW_POST: {
-            return {
-                ...state ,
-                newPostText: action.newText
-            }
 
-        }
         case SET_USER_PROFILE: {
             return {...state , profile: action.profile}
         }
@@ -88,23 +77,18 @@ const profileReducer = (state: ProfilePageType = initialState , action: ActionTy
     }
 };
 
-export type ActionType = ReturnType<typeof addPostAC> | ReturnType<typeof updateNewPostAC> |
-    ReturnType<typeof sendNewMessageAC> | ReturnType<typeof updateNewMessageBodyAC> | ReturnType<typeof followSuccess>
+export type ActionType = ReturnType<typeof addPostAC> |
+    ReturnType<typeof sendNewMessageAC> | ReturnType<typeof followSuccess>
     | ReturnType<typeof unFollowSuccess> | ReturnType<typeof setFollowers> | ReturnType<typeof setCurrentPage> |
     ReturnType<typeof setTotalFollowersCount> | ReturnType<typeof toggleIsFetching> | ReturnType<typeof setUserProfile>
     | ReturnType<typeof setAuthUserData> | ReturnType<typeof toggleFollowingProgress> |
     ReturnType<typeof setStatus>
 
 
-export const addPostAC = () => (
-    {type: 'ADD-POST'}) as const
+export const addPostAC = (newPostBody:string) => (
+    {type: 'ADD-POST',newPostBody}) as const
 
-export const updateNewPostAC = (newText: string) => {
-    return {
-        type: 'UPDATE-NEW-POST' ,
-        newText: newText
-    } as const
-}
+
 export const setUserProfile = (profile: UserProfileType) => {
     return {
         type: SET_USER_PROFILE ,
