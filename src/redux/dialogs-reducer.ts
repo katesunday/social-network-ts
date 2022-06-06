@@ -2,7 +2,7 @@
 import {ActionType} from "./profile-reducer";
 
 const SEND_MESSAGE = 'SEND-MESSAGE';
-const UPDATE_NEW_MESSAGE_BODY = 'UPDATE-NEW-MESSAGE-BODY';
+//const UPDATE_NEW_MESSAGE_BODY = 'UPDATE-NEW-MESSAGE-BODY';
 
 export type DialogsDataPropsType = {
     id: number
@@ -36,16 +36,10 @@ let initialState = {
     newMessageText: 'type here...'
 }
 
-// type dialogsReducerType = (state: DialogsPageType , action: ActionType) => DialogsPageType
+
 export const dialogsReducer = (state = initialState , action: ActionType): DialogsPageType => {
     switch (action.type) {
-        // case UPDATE_NEW_MESSAGE_BODY: {
-        //     return {
-        //         ...state ,
-        //         newMessageText: action.body
-        //     }
-        //     // stateCopy.newMessageText = action.body
-        // }
+
         case SEND_MESSAGE : {
             let newMessage = action.newMessageBody
             return {
@@ -58,8 +52,7 @@ export const dialogsReducer = (state = initialState , action: ActionType): Dialo
     }
 };
 
-// export const updateNewMessageBodyAC = (body: string) => (
-//     {type: 'UPDATE-NEW-MESSAGE-BODY' , body: body}) as const
+
 export const sendNewMessageAC = (newMessageBody:string) => (
     {type: 'SEND-MESSAGE',newMessageBody}) as const
 

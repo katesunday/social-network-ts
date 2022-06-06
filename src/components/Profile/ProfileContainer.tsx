@@ -23,6 +23,7 @@ export type ProfilePropsType = {
     updateStatus: (newStatus: string) => void
     status: string
     userID: number | null
+    authorizedUserID:number
 }
 
 class ProfileContainer extends React.Component<ProfilePropsType> {
@@ -32,7 +33,7 @@ class ProfileContainer extends React.Component<ProfilePropsType> {
         let userId: string | undefined = this.props.match?.userId
         if (!userId) {
             //this.props.checkAuthMeProfile()
-            userId = (22990).toString()
+            userId = (this.props.authorizedUserID).toString()
 
             if (this.props.userID) {
                 userId = this.props.userID.toString()
@@ -63,14 +64,17 @@ type MapStateToPropsType = {
     profile: UserProfileType | null,
     status: string
     userID: number | null
-    // isAuth:boolean
+    authorizedUserID:number | null
+     isAuth:boolean
 
 }
 let mapStateToProps = (state: StoreType): MapStateToPropsType => {
     return {
         profile: state.profilePage.profile ,
         status: state.profilePage.status ,
-        userID: state.auth.id
+        userID: state.auth.id,
+        authorizedUserID:state.auth.id,
+        isAuth:state.auth.isAuth
     }
 }
 

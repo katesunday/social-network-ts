@@ -3,6 +3,7 @@ import {ActionType} from "./profile-reducer";
 import {Dispatch} from "redux";
 import {ThunkAction, ThunkDispatch } from "redux-thunk";
 import {StoreType} from "./redux-store";
+import {stopSubmit} from "redux-form";
 
 const SET_USER_DATA = 'SET_USER_DATA'
 
@@ -53,11 +54,18 @@ export const getAuthUserData = () => {
     }
 }
 
-export const loginUser = (email: string , password: string , rememberMe: boolean): ThunkAction<void, StoreType, unknown, ActionType> => {
+export const loginUser = (email: string , password: string , rememberMe: boolean):
+    ThunkAction<void, StoreType, unknown, ActionType | ReturnType<typeof stopSubmit>> => {
     return (dispatch )  => {
         authAPI.loginUser(email,password,rememberMe)
-            .then((data)=>{
+            .then((res)=>{
+                if(res.resultCode ===0){
                dispatch(getAuthUserData())
+                }
+                else {
+                    let errorMessage = res.messages.length >0 ? res.messages[0]: 'Invalid email or password'
+                    dispatch(stopSubmit('LoginForm',{_error:errorMessage}))
+                }
             })
     }
 }

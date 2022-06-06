@@ -6,6 +6,7 @@ import {connect } from "react-redux";
 import {loginUser} from "../../redux/auth-reducer";
 import {StoreType} from "../../redux/redux-store";
 import { Navigate } from 'react-router-dom';
+import s from './Login.module.css'
 
 type FormDataType = {
     email:string
@@ -36,6 +37,7 @@ const Login = (props:LoginPropsType) => {
 
 
 const LoginForm:React.FC<InjectedFormProps<FormDataType>> = (props) => {
+    console.log(props.error)
     return <form onSubmit={props.handleSubmit}>
         <div>
             <Field component = {Input} name={'email'} placeholder = 'email'
@@ -49,6 +51,7 @@ const LoginForm:React.FC<InjectedFormProps<FormDataType>> = (props) => {
             <Field component = {Input} type="checkbox" name={'rememberMe'} />
             <span>Remember me</span>
         </div>
+        <div className={s.errorMessage}>{props.error && <div>{props.error}</div>}</div>
         <div>
             <button>Login</button>
         </div>

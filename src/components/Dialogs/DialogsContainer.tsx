@@ -10,13 +10,11 @@ import {ActionType} from "../../redux/profile-reducer";
 type MapStateToPropsType = {
     dialogsPage: DialogsPageType
     newMessageText: string
-    // isAuth:boolean
 }
 let mapStateToProps = (state: StoreType): MapStateToPropsType => {
     return {
         dialogsPage: state.dialogsPage ,
         newMessageText: state.dialogsPage.newMessageText ,
-        // isAuth:state.auth.isAuth,
     }
 }
 let mapDispatchToProps = (dispatch: (action: ActionType) => void) => {
@@ -24,9 +22,6 @@ let mapDispatchToProps = (dispatch: (action: ActionType) => void) => {
         sendMessage: (newMessageBody:string) => {
             dispatch(sendNewMessageAC(newMessageBody))
         } ,
-        // updateNewMessageBody: (body: string) => {
-        //     dispatch(updateNewMessageBodyAC(body))
-        // }
 
     }
 }

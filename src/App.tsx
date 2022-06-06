@@ -32,8 +32,6 @@ const App = () => {
                     <Route path='/settings' element={<Settings/>}/>
                     <Route path='/login' element={<Login/>}/>
                 </Routes>
-                {/*<Profile/>*/}
-                {/*<Dialogs />*/}
             </div>
         </div>
 
