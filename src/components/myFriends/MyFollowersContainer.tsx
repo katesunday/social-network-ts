@@ -11,6 +11,7 @@ import {
     toggleIsFetching , unFollow ,
 } from "../../redux/myFollowers-reducer";
 import MyFollowers from "./MyFollowers";
+import {Navigate} from "react-router-dom";
 
 type MyFollowersPropsType = {
     followers: Array<FollowerType>
@@ -22,33 +23,36 @@ type MyFollowersPropsType = {
     isFetching: boolean
     followingInProgress: Array<number>
     toggleIsFetching: (isFetching: boolean) => void
-    getFollowers:(currentPage:number,pageSize:number)=> void
+    getFollowers: (currentPage: number , pageSize: number) => void
     follow: (id: number) => void
     unFollow: (id: number) => void
+    isAuth: boolean
 }
 
 class MyFollowersContainer extends React.Component<MyFollowersPropsType> {  // my props and my state
 
     componentDidMount() {
-        this.props.getFollowers(this.props.currentPage,this.props.pageSize)
+        this.props.getFollowers(this.props.currentPage , this.props.pageSize)
     }
 
     onPageChanged = (page: number) => {
-        this.props.getFollowers(page,this.props.pageSize)
+        this.props.getFollowers(page , this.props.pageSize)
     }
 
 
     render() {
-        return <MyFollowers followers={this.props.followers}
-                            pageSize={this.props.pageSize}
-                            totalFollowersCount={this.props.totalFollowersCount}
-                            currentPage={this.props.currentPage}
-                            onPageChanged={this.onPageChanged}
-                            isFetching={this.props.isFetching}
-                            followingInProgress={this.props.followingInProgress}
-                            follow={this.props.follow}
-                            unFollow={this.props.unFollow}
-        />
+        return this.props.isAuth ?
+            <MyFollowers followers={this.props.followers}
+                         pageSize={this.props.pageSize}
+                         totalFollowersCount={this.props.totalFollowersCount}
+                         currentPage={this.props.currentPage}
+                         onPageChanged={this.onPageChanged}
+                         isFetching={this.props.isFetching}
+                         followingInProgress={this.props.followingInProgress}
+                         follow={this.props.follow}
+                         unFollow={this.props.unFollow}
+            /> :
+            <Navigate to={'/login'}/>
     }
 }
 
@@ -60,6 +64,7 @@ type MapStateToPropsType = {
     currentPage: number
     isFetching: boolean
     followingInProgress: Array<number>
+    isAuth: boolean
 }
 let mapStateToProps = (state: StoreType): MapStateToPropsType => {
     return {
@@ -69,34 +74,14 @@ let mapStateToProps = (state: StoreType): MapStateToPropsType => {
         currentPage: state.myFollowers.currentPage ,
         isFetching: state.myFollowers.isFetching ,
         followingInProgress: state.myFollowers.followingInProgress ,
+        isAuth: state.auth.isAuth ,
     }
 
 }
-// let mapDispatchToProps = (dispatch: (action: ActionType) => void) => {
-//     return {
-//         follow: (userID: number) => {
-//             dispatch(followAC(userID))
-//         } ,
-//         unFollow: (userID: number) => {
-//             dispatch(unFollowAC(userID))
-//         } ,
-//         setFollowers: (newFollowers: Array<FollowerType>) => {
-//             dispatch(setFollowersAC(newFollowers))
-//         } ,
-//         setCurrentPage: (currentPage: number) => {
-//             dispatch(setCurrentPageAC(currentPage))
-//         } ,
-//         setTotalFollowersCount: (totalCount: number) => {
-//             dispatch(setTotalFollowersCountAC(totalCount))
-//         },
-//         toggleIsFetching:(isFetching:boolean)=>{
-//             dispatch(toggleIsFetchingAC(isFetching))
-//         }
-//     }
-// }
+
 export default connect(mapStateToProps , {
     follow , unFollow , setFollowers , setCurrentPage ,
-    setTotalFollowersCount , toggleIsFetching , toggleFollowingProgress,
+    setTotalFollowersCount , toggleIsFetching , toggleFollowingProgress ,
     getFollowers
 })
 (MyFollowersContainer)

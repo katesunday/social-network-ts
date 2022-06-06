@@ -16,7 +16,6 @@ type MyFollowersPropsType = {
     follow: (id: number) => void
     unFollow: (id: number) => void
 
-
 }
 
 const MyFollowers = (props: MyFollowersPropsType) => {

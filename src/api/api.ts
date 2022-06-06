@@ -1,4 +1,5 @@
 import axios from "axios";
+import login from "../components/Login/Login";
 
 const instance = axios.create({
     withCredentials: true ,
@@ -49,6 +50,14 @@ export const authAPI = {
         return instance.get(`auth/me`)
             .then(response => response.data)
     } ,
+    loginUser:(email: string , password: string , rememberMe: boolean = false)=>{
+        return instance.post(`auth/login`,{email , password , rememberMe})
+            .then(response=> response.data)
+    },
+    logoutUser:()=>{
+        return instance.delete(`auth/login`)
+    }
+
 }
 
 
