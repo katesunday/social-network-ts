@@ -6,8 +6,10 @@ import myFollowersReducer from "./myFollowers-reducer";
 import authReducer from "./auth-reducer";
 import thunkMiddleware from "redux-thunk";
 import { reducer as formReducer } from 'redux-form';
+import AppReducer from "./app-reducer";
 
 let rootReducer = combineReducers({
+    app: AppReducer,
     profilePage:profileReducer,
     dialogsPage: dialogsReducer,
     sideFriendsBarPage:sideFriendsBarPageReducer,

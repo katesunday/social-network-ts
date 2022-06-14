@@ -146,6 +146,7 @@ export const toggleFollowingProgress = (isFetching: boolean,userId:number) => {
 export const getFollowers = (currentPage:number,pageSize:number)=> {
     return (dispatch: (action: ActionType) => void) => {
         dispatch(toggleIsFetching(true))
+        dispatch(setCurrentPage(currentPage))
         followersAPI.getFollowers(currentPage , pageSize).then(data => {
             dispatch(setFollowers(data.items))
             dispatch(setTotalFollowersCount(data.totalCount))

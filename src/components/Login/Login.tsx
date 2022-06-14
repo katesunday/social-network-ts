@@ -37,7 +37,6 @@ const Login = (props:LoginPropsType) => {
 
 
 const LoginForm:React.FC<InjectedFormProps<FormDataType>> = (props) => {
-    console.log(props.error)
     return <form onSubmit={props.handleSubmit}>
         <div>
             <Field component = {Input} name={'email'} placeholder = 'email'
