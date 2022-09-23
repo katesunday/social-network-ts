@@ -11,6 +11,7 @@ import {setAuthUserData} from "./auth-reducer";
 import {PostDataPropsType} from "../components/Profile/MyPosts/Post/MyPostsContainer";
 
 const ADD_POST = 'ADD-POST';
+const DELETE_POST = 'DELETE-POST';
 const SET_USER_PROFILE = 'SET-USER-PROFILE';
 const SET_STATUS = 'SET-STATUS';
 
@@ -65,7 +66,9 @@ const profileReducer = (state: ProfilePageType = initialState , action: ActionTy
             }
 
         }
-
+        case DELETE_POST:{
+            return {...state,posts:state.posts.filter(el=>el.id!== action.id)}
+        }
         case SET_USER_PROFILE: {
             return {...state , profile: action.profile}
         }
@@ -77,7 +80,7 @@ const profileReducer = (state: ProfilePageType = initialState , action: ActionTy
     }
 };
 
-export type ActionType = ReturnType<typeof addPostAC> |
+export type ActionType = ReturnType<typeof addPostAC> | ReturnType<typeof deletePostAC> |
     ReturnType<typeof sendNewMessageAC> | ReturnType<typeof followSuccess>
     | ReturnType<typeof unFollowSuccess> | ReturnType<typeof setFollowers> | ReturnType<typeof setCurrentPage> |
     ReturnType<typeof setTotalFollowersCount> | ReturnType<typeof toggleIsFetching> | ReturnType<typeof setUserProfile>
@@ -87,6 +90,9 @@ export type ActionType = ReturnType<typeof addPostAC> |
 
 export const addPostAC = (newPostBody:string) => (
     {type: 'ADD-POST',newPostBody}) as const
+
+export const deletePostAC = (id:number) => (
+    {type: 'DELETE-POST',id}) as const
 
 
 export const setUserProfile = (profile: UserProfileType) => {

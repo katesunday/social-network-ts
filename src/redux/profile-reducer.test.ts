@@ -1,4 +1,4 @@
-import profileReducer , {addPostAC , ProfilePageType , setStatus} from "./profile-reducer";
+import profileReducer , {addPostAC , deletePostAC , ProfilePageType , setStatus} from "./profile-reducer";
 
 let startState:ProfilePageType;
 
@@ -20,10 +20,17 @@ test('new post should be added',()=>{
     expect(endState.posts[0].message).toBe('new test post')
 })
 
-test('new status should be added',()=>{
+test('new status should be updated',()=>{
     const endState = profileReducer(startState,setStatus('new test status'))
 
     expect(endState.profile).toBeDefined()
     expect(endState.status).toBe('new test status')
 
+})
+
+test('new post should be deleted',()=>{
+    const endState = profileReducer(startState, deletePostAC(1))
+
+    expect(endState.posts.length).toBe(1)
+    expect(endState.posts[0].message).toBe('It\'s my first post!')
 })
