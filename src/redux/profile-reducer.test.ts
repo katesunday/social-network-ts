@@ -1,4 +1,4 @@
-import profileReducer , {addPostAC , ProfilePageType} from "./profile-reducer";
+import profileReducer , {addPostAC , ProfilePageType , setStatus} from "./profile-reducer";
 
 let startState:ProfilePageType;
 
@@ -17,4 +17,13 @@ test('new post should be added',()=>{
     const endState = profileReducer(startState, addPostAC('new test post'))
 
     expect(endState.posts.length).toBe(3)
+    expect(endState.posts[0].message).toBe('new test post')
+})
+
+test('new status should be added',()=>{
+    const endState = profileReducer(startState,setStatus('new test status'))
+
+    expect(endState.profile).toBeDefined()
+    expect(endState.status).toBe('new test status')
+
 })

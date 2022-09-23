@@ -131,10 +131,7 @@ export const getStatus = (id: string) => {
     return (dispatch: (action: ActionType) => void) => {
         profileAPI.getStatus(id)
             .then(data => {
-                //if(data.resultCode ===0){
                 dispatch(setStatus(data))
-                //}
-
             })
     }
 }
