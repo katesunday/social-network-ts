@@ -1,8 +1,6 @@
-import {Dispatch} from "redux";
 import {getAuthUserData} from "./auth-reducer";
 import {ThunkDispatch} from "redux-thunk";
 import {StoreType} from "./redux-store";
-import {ActionType} from "./profile-reducer";
 import {AxiosError} from "axios";
 
 
@@ -52,15 +50,7 @@ export const initializeApp = () => {
     }
 }
 
-// export const initializeApp = () => {
-//     return  (dispatch: ThunkDispatch<StoreType , unknown , AppActionsType>) => {
-//         let promise =  dispatch(getAuthUserData())
-//         Promise.all([promise]).then(()=>{
-//             dispatch(initializedSuccess())
-//         })
-//
-//     }
-// }
+
 
 
 

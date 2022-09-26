@@ -4,7 +4,7 @@ import {Dispatch} from "redux";
 import {ThunkAction} from "redux-thunk";
 import {StoreType} from "./redux-store";
 import {stopSubmit} from "redux-form";
-import { AxiosError } from "axios";
+import {AxiosError} from "axios";
 
 const SET_USER_DATA = 'SET_USER_DATA'
 
@@ -42,24 +42,14 @@ export const setAuthUserData = (data: UserDataType) => {
 }
 
 
-// export const getAuthUserData = () => {
-//     return (dispatch: Dispatch ) => {
-//       return  authAPI.isAuthMe()
-//             .then(data => {
-//                 if (data.resultCode === 0) {
-//                     dispatch(setAuthUserData({...data.data,isAuth:true}))
-//                 }
-//             })
-//     }
-// }
 export const getAuthUserData = () => {
-    return async (dispatch: Dispatch ) => {
+    return async (dispatch: Dispatch) => {
         try {
             let data = await authAPI.isAuthMe()
             if (data.resultCode === 0) {
-                dispatch(setAuthUserData({...data.data,isAuth:true}))
+                dispatch(setAuthUserData({...data.data , isAuth: true}))
             }
-        }  catch (e) {
+        } catch (e) {
             const err = e as Error | AxiosError<{ error: string }>
             console.log(err)
         }
@@ -68,27 +58,32 @@ export const getAuthUserData = () => {
 }
 
 export const loginUser = (email: string , password: string , rememberMe: boolean):
-    ThunkAction<void, StoreType, unknown, ActionType | ReturnType<typeof stopSubmit>> => {
-    return (dispatch )  => {
-        authAPI.loginUser(email,password,rememberMe)
-            .then((res)=>{
-                if(res.resultCode ===0){
-               dispatch(getAuthUserData())
-                }
-                else {
-                    let errorMessage = res.messages.length >0 ? res.messages[0]: 'Invalid email or password'
-                    dispatch(stopSubmit('LoginForm',{_error:errorMessage}))
-                }
-            })
+    ThunkAction<void , StoreType , unknown , ActionType | ReturnType<typeof stopSubmit>> => {
+    return async (dispatch) => {
+        try {
+            let res = await authAPI.loginUser(email , password , rememberMe)
+            if (res.resultCode === 0) {
+                dispatch(getAuthUserData())
+            } else {
+                let errorMessage = res.messages.length > 0 ? res.messages[0] : 'Invalid email or password'
+                dispatch(stopSubmit('LoginForm' , {_error: errorMessage}))
+            }
+        } catch (e) {
+            const err = e as Error | AxiosError<{ error: string }>
+            console.log(err)
+        }
     }
 }
 
-export const logoutUser = ()=>{
-    return (dispatch: Dispatch ) =>{
-        authAPI.logoutUser()
-            .then(data=>{
-                dispatch(setAuthUserData({login:null,email:null,id:null,isAuth:false}))
-            })
+export const logoutUser = () => {
+    return async (dispatch: Dispatch) => {
+        try {
+            await authAPI.logoutUser()
+            dispatch(setAuthUserData({login: null , email: null , id: null , isAuth: false}))
+        } catch (e) {
+            const err = e as Error | AxiosError<{ error: string }>
+            console.log(err)
+        }
     }
 }
 
