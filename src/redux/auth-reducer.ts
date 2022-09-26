@@ -1,9 +1,10 @@
 import {authAPI} from "../api/api";
 import {ActionType} from "./profile-reducer";
 import {Dispatch} from "redux";
-import {ThunkAction, ThunkDispatch } from "redux-thunk";
+import {ThunkAction} from "redux-thunk";
 import {StoreType} from "./redux-store";
 import {stopSubmit} from "redux-form";
+import { AxiosError } from "axios";
 
 const SET_USER_DATA = 'SET_USER_DATA'
 
@@ -41,16 +42,28 @@ export const setAuthUserData = (data: UserDataType) => {
 }
 
 
-
+// export const getAuthUserData = () => {
+//     return (dispatch: Dispatch ) => {
+//       return  authAPI.isAuthMe()
+//             .then(data => {
+//                 if (data.resultCode === 0) {
+//                     dispatch(setAuthUserData({...data.data,isAuth:true}))
+//                 }
+//             })
+//     }
+// }
 export const getAuthUserData = () => {
-    return (dispatch: Dispatch ) => {
-      return  authAPI.isAuthMe()
-            .then(data => {
-                if (data.resultCode === 0) {
-                    // let {email,id,login} = response.data.data
-                    dispatch(setAuthUserData({...data.data,isAuth:true}))
-                }
-            })
+    return async (dispatch: Dispatch ) => {
+        try {
+            let data = await authAPI.isAuthMe()
+            if (data.resultCode === 0) {
+                dispatch(setAuthUserData({...data.data,isAuth:true}))
+            }
+        }  catch (e) {
+            const err = e as Error | AxiosError<{ error: string }>
+            console.log(err)
+        }
+
     }
 }
 

@@ -28,7 +28,7 @@ test('new status should be updated',()=>{
 
 })
 
-test('new post should be deleted',()=>{
+test('post should be deleted',()=>{
     const endState = profileReducer(startState, deletePostAC(1))
 
     expect(endState.posts.length).toBe(1)

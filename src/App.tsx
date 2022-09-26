@@ -12,11 +12,9 @@ import HeaderContainer from "./components/Header/HeaderContainer";
 import Login from "./components/Login/Login";
 import {compose} from "redux";
 import {connect} from "react-redux";
-import withAuthRedirect from "./hoc/withAuthRedirect";
 import {AppDataType , initializeApp} from "./redux/app-reducer";
 import {StoreType} from "./redux/redux-store";
 import Preloader from "./components/common/Preloader";
-import Dialogs from "./components/Dialogs/Dialogs";
 
 
 export type AppPropsType = {
@@ -27,7 +25,6 @@ export type AppPropsType = {
 class App extends React.Component<AppPropsType> {
     componentDidMount() {
         this.props.initializeApp()
-        // this.props.history.push('lo')
     }
 
     render() {
@@ -68,7 +65,6 @@ const mapStateToProps = (state: StoreType): AppDataType => {
 }
 
 export default compose(
-    // withAuthRedirect ,
     connect(mapStateToProps , {initializeApp}))(App);
 
 

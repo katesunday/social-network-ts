@@ -3,6 +3,7 @@ import {getAuthUserData} from "./auth-reducer";
 import {ThunkDispatch} from "redux-thunk";
 import {StoreType} from "./redux-store";
 import {ActionType} from "./profile-reducer";
+import {AxiosError} from "axios";
 
 
 const INITIALIZED_SUCCESS = 'INITIALIZED-SUCCESS'
@@ -38,26 +39,30 @@ export const initializedSuccess = () => {
 }
 
 export const initializeApp = () => {
-    return (dispatch: ThunkDispatch<StoreType , unknown , AppActionsType>) => {
-       let promise =  dispatch(getAuthUserData())
-            Promise.all([promise]).then(()=>{
-                dispatch(initializedSuccess())
-            })
+    return  async (dispatch: ThunkDispatch<StoreType , unknown , AppActionsType>) => {
+      try {
+          await dispatch(getAuthUserData())
+          dispatch(initializedSuccess())
+      }
+      catch (e) {
+          const err = e as Error | AxiosError<{ error: string }>
+          console.log(err)
+      }
 
     }
 }
 
-// export const getAuthUserData = () => {
-//     return (dispatch: Dispatch ) => {
-//         authAPI.isAuthMe()
-//             .then(data => {
-//                 if (data.resultCode === 0) {
-//                     // let {email,id,login} = response.data.data
-//                     dispatch(setAuthUserData({...data.data,isAuth:true}))
-//                 }
-//             })
+// export const initializeApp = () => {
+//     return  (dispatch: ThunkDispatch<StoreType , unknown , AppActionsType>) => {
+//         let promise =  dispatch(getAuthUserData())
+//         Promise.all([promise]).then(()=>{
+//             dispatch(initializedSuccess())
+//         })
+//
 //     }
 // }
+
+
 
 
 export default appReducer;
