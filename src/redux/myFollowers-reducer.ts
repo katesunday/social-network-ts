@@ -1,6 +1,7 @@
 
 import {followersAPI} from "../api/api";
 import {ActionType} from "./profile-reducer";
+import {AxiosError} from "axios";
 
 const FOLLOW = 'FOLLOW';
 const UNFOLLOW = 'UNFOLLOW';
@@ -144,15 +145,20 @@ export const toggleFollowingProgress = (isFetching: boolean,userId:number) => {
 }
 
 export const getFollowers = (currentPage:number,pageSize:number)=> {
-    return (dispatch: (action: ActionType) => void) => {
-        dispatch(toggleIsFetching(true))
-        dispatch(setCurrentPage(currentPage))
-        followersAPI.getFollowers(currentPage , pageSize).then(data => {
+    return async (dispatch: (action: ActionType) => void) => {
+        try {
+            dispatch(toggleIsFetching(true))
+            dispatch(setCurrentPage(currentPage))
+            let data = await followersAPI.getFollowers(currentPage , pageSize)
             dispatch(setFollowers(data.items))
             dispatch(setTotalFollowersCount(data.totalCount))
             dispatch(setCurrentPage(currentPage))
             dispatch(toggleIsFetching(false))
-        })
+        }
+        catch (e) {
+            const err = e as Error | AxiosError<{ error: string }>
+            console.log(err)
+        }
     }
 }
 export const follow = (id:number)=>{
