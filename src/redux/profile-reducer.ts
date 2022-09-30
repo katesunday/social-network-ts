@@ -1,14 +1,13 @@
 import {authAPI , followersAPI , profileAPI} from "../api/api";
 import {sendNewMessageAC } from "./dialogs-reducer";
-import {
-    followSuccess ,
+import {followUnFollowSuccess ,
     setCurrentPage ,
     setFollowers ,
     setTotalFollowersCount , toggleFollowingProgress , toggleIsFetching ,
-    unFollowSuccess
 } from "./myFollowers-reducer";
 import {setAuthUserData} from "./auth-reducer";
 import {PostDataPropsType} from "../components/Profile/MyPosts/Post/MyPostsContainer";
+import {AxiosError} from "axios";
 
 const ADD_POST = 'ADD-POST';
 const DELETE_POST = 'DELETE-POST';
@@ -81,8 +80,7 @@ const profileReducer = (state: ProfilePageType = initialState , action: ActionTy
 };
 
 export type ActionType = ReturnType<typeof addPostAC> | ReturnType<typeof deletePostAC> |
-    ReturnType<typeof sendNewMessageAC> | ReturnType<typeof followSuccess>
-    | ReturnType<typeof unFollowSuccess> | ReturnType<typeof setFollowers> | ReturnType<typeof setCurrentPage> |
+    ReturnType<typeof sendNewMessageAC> | ReturnType<typeof followUnFollowSuccess> | ReturnType<typeof setFollowers> | ReturnType<typeof setCurrentPage> |
     ReturnType<typeof setTotalFollowersCount> | ReturnType<typeof toggleIsFetching> | ReturnType<typeof setUserProfile>
     | ReturnType<typeof setAuthUserData> | ReturnType<typeof toggleFollowingProgress> |
     ReturnType<typeof setStatus>
@@ -110,47 +108,55 @@ export const setStatus = (status: string) => {
 }
 
 export const getUserProfile = (id: string | undefined) => {
-    return (dispatch: (action: ActionType) => void) => {
-        followersAPI.getProfile(id)
-            .then(data => {
-                dispatch(setUserProfile(data))
-            })
+    return async (dispatch: (action: ActionType) => void) => {
+       try {
+           let data = await  followersAPI.getProfile(id)
+           dispatch(setUserProfile(data))
+       }catch (e) {
+           const err = e as Error | AxiosError<{ error: string }>
+           console.log(err)
+       }
     }
 }
 
 export const checkAuthMeProfile = () => {
-    return (dispatch: (action: ActionType) => void) => {
-        authAPI.isAuthMe()
-            .then(data => {
-                if (data.resultCode === 0) {
-                    let userId = data.data.id
-                    followersAPI.getProfile(userId)
-                        .then(data => {
-                            dispatch(setUserProfile(data))
-                        })
-                }
-            })
+    return async (dispatch: (action: ActionType) => void) => {
+        try {
+            let data = await authAPI.isAuthMe()
+            if (data.resultCode === 0){
+                let userId = data.data.id
+                let profile = await  followersAPI.getProfile(userId)
+                dispatch(setUserProfile(profile))
+            }
+        }catch (e) {
+            const err = e as Error | AxiosError<{ error: string }>
+            console.log(err)
+        }
     }
 }
 
 export const getStatus = (id: string) => {
-    return (dispatch: (action: ActionType) => void) => {
-        profileAPI.getStatus(id)
-            .then(data => {
-                dispatch(setStatus(data))
-            })
+    return async (dispatch: (action: ActionType) => void) => {
+      try {
+          let data = await  profileAPI.getStatus(id)
+          dispatch(setStatus(data))
+      }catch (e) {
+          const err = e as Error | AxiosError<{ error: string }>
+          console.log(err)
+      }
     }
 }
 export const updateStatus = (newStatus: string) => {
-    return (dispatch: (action: ActionType) => void) => {
-        profileAPI.updateStatus(newStatus)
-            .then(data => {
-                console.log(data)
-                if (data.resultCode === 0) {
-                    dispatch(setStatus(newStatus))
-                }
-
-            })
+    return async (dispatch: (action: ActionType) => void) => {
+       try {
+           let data = await profileAPI.updateStatus(newStatus)
+           if (data.resultCode === 0) {
+               dispatch(setStatus(newStatus))
+           }
+       }catch (e) {
+           const err = e as Error | AxiosError<{ error: string }>
+           console.log(err)
+       }
     }
 }
 

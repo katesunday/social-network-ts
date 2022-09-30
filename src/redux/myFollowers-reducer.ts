@@ -1,4 +1,3 @@
-
 import {followersAPI} from "../api/api";
 import {ActionType} from "./profile-reducer";
 import {AxiosError} from "axios";
@@ -10,6 +9,7 @@ const SET_CURRENT_PAGE = 'SET-CURRENT-PAGE'
 const SET_TOTAL_FOLLOWERS_COUNT = 'SET-TOTAL-FOLLOWERS-COUNT'
 const TOGGLE_IS_FETCHING = 'TOGGLE-IS-FETCHING'
 const TOGGLE_IS_FOLLOWING_PROGRESS = 'TOGGLE-IS-FOLLOWING-PROGRESS'
+const FOLLOW_UNFOLLOW = 'FOLLOW-UNFOLLOW'
 
 export type MyFollowersType = {
     followers: Array<FollowerType>
@@ -17,7 +17,7 @@ export type MyFollowersType = {
     totalFollowersCount: number
     currentPage: number
     isFetching: boolean
-    followingInProgress:Array<number>
+    followingInProgress: Array<number>
 }
 export type FollowerType = {
     photos: {
@@ -48,16 +48,10 @@ let initialState: MyFollowersType = {
 //type profileReducerType = (state: ProfilePageType , action: ActionType) => ProfilePageType
 const myFollowersReducer = (state = initialState , action: ActionType): MyFollowersType => {
     switch (action.type) {
-        case "FOLLOW": {
+        case FOLLOW_UNFOLLOW: {
             return {
                 ...state ,
-                followers: state.followers.map((el) => el.id === action.userID ? {...el , followed: true} : el)
-            }
-        }
-        case "UNFOLLOW": {
-            return {
-                ...state ,
-                followers: state.followers.map((el) => el.id === action.userID ? {...el , followed: false} : el)
+                followers: state.followers.map((el) => el.id === action.userID ? {...el , followed: action.followed} : el)
             }
         }
         case "SET-FOLLOWERS": {
@@ -88,7 +82,7 @@ const myFollowersReducer = (state = initialState , action: ActionType): MyFollow
             return {
                 ...state ,
                 followingInProgress: action.followingInProgress
-                    ? [...state.followingInProgress,action.userId]
+                    ? [...state.followingInProgress , action.userId]
                     : state.followingInProgress.filter((id) => id !== action.userId)
             }
         }
@@ -97,20 +91,14 @@ const myFollowersReducer = (state = initialState , action: ActionType): MyFollow
     }
 };
 
-export const followSuccess = (userID: number) => {
+export const followUnFollowSuccess = (userID: number,followed:boolean) => {
     return {
-        type: FOLLOW ,
-        userID: userID
+        type: FOLLOW_UNFOLLOW ,
+        userID: userID,
+        followed: followed
     } as const
-
 }
-export const unFollowSuccess = (userID: number) => {
-    return {
-        type: UNFOLLOW ,
-        userID: userID
-    } as const
 
-}
 export const setFollowers = (newFollowers: Array<FollowerType>) => {
     return {
         type: SET_FOLLOWERS ,
@@ -136,15 +124,15 @@ export const toggleIsFetching = (isFetching: boolean) => {
         isFetching: isFetching
     } as const
 }
-export const toggleFollowingProgress = (isFetching: boolean,userId:number) => {
+export const toggleFollowingProgress = (isFetching: boolean , userId: number) => {
     return {
         type: TOGGLE_IS_FOLLOWING_PROGRESS ,
-        followingInProgress: isFetching,
-        userId:userId
+        followingInProgress: isFetching ,
+        userId: userId
     } as const
 }
 
-export const getFollowers = (currentPage:number,pageSize:number)=> {
+export const getFollowers = (currentPage: number , pageSize: number) => {
     return async (dispatch: (action: ActionType) => void) => {
         try {
             dispatch(toggleIsFetching(true))
@@ -154,36 +142,37 @@ export const getFollowers = (currentPage:number,pageSize:number)=> {
             dispatch(setTotalFollowersCount(data.totalCount))
             dispatch(setCurrentPage(currentPage))
             dispatch(toggleIsFetching(false))
-        }
-        catch (e) {
+        } catch (e) {
             const err = e as Error | AxiosError<{ error: string }>
             console.log(err)
         }
     }
 }
-export const follow = (id:number)=>{
-    return (dispatch: (action: ActionType) => void)=>{
-        dispatch(toggleFollowingProgress(true, id))
-        followersAPI.followUser(id)
-            .then(data => {
-                if (data.resultCode === 0) {
-                    dispatch(followSuccess(id))
-                }
-                dispatch(toggleFollowingProgress(false, id))
-            })
+export const followUnFollowFlow = async (id: number , apiMethod: (id: number) => any , followed:boolean , dispatch: (action: ActionType) => void) => {
+    try {
+        dispatch(toggleFollowingProgress(true , id))
+        let data = await apiMethod(id)
+        if (data.resultCode === 0) {
+            dispatch(followUnFollowSuccess(id,followed))
+        }
+        dispatch(toggleFollowingProgress(false , id))
+    } catch (e) {
+        const err = e as Error | AxiosError<{ error: string }>
+        console.log(err)
+    }
+
+}
+export const follow = (id: number) => {
+    return (dispatch: (action: ActionType) => void) => {
+        let apiMethod = followersAPI.followUser.bind(followersAPI)
+        followUnFollowFlow(id , apiMethod , true , dispatch)
     }
 }
 
-export const unFollow = (id:number)=>{
-    return (dispatch: (action: ActionType) => void)=>{
-        dispatch(toggleFollowingProgress(true , id))
-        followersAPI.unFollowUser(id)
-            .then(data => {
-                if (data.resultCode === 0) {
-                    dispatch(unFollowSuccess(id))
-                }
-                dispatch(toggleFollowingProgress(false , id))
-            })
+export const unFollow = (id: number) => {
+    return (dispatch: (action: ActionType) => void) => {
+        let apiMethod = followersAPI.unFollowUser.bind(followersAPI)
+        followUnFollowFlow(id , apiMethod , false , dispatch)
     }
 }
 

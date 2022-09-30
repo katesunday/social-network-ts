@@ -73,18 +73,7 @@ type MapStateToPropsType = {
     followingInProgress: Array<number>
     isAuth: boolean
 }
-// let mapStateToProps = (state: StoreType): MapStateToPropsType => {
-//     return {
-//         followers: state.myFollowers.followers ,
-//         pageSize: state.myFollowers.pageSize ,
-//         totalFollowersCount: state.myFollowers.totalFollowersCount ,
-//         currentPage: state.myFollowers.currentPage ,
-//         isFetching: state.myFollowers.isFetching ,
-//         followingInProgress: state.myFollowers.followingInProgress ,
-//         isAuth: state.auth.isAuth ,
-//     }
-//
-// }
+
 let mapStateToProps = (state: StoreType)=>{
     return{
         followers:getMyFollowers(state),
